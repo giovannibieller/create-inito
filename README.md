@@ -1,4 +1,4 @@
-# CREATE INITO PROJECT
+# CREATE INITO TOOL
 
 Initializer for [INITO](https://github.com/giovannibieller/inito)
 
