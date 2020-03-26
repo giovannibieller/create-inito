@@ -2,54 +2,60 @@
 const shell = require('shelljs');
 const colors = require('colors');
 const fs = require('fs');
-const readline = require('readline');
+const ora = require('ora');
 
 const appName = process.argv[2];
-const appDirectory = `${process.cwd()}/${appName}`;
 
 const initoRepository = 'https://github.com/giovannibieller/inito.git';
 
+const spinner = ora();
+
 const run = async () => {
-	// clone inito repository in app
-	await gitCloneInito();
-	// npm install
-	await npmInstall();
-	// change package.json name
-	await changePackageName();
-	// reinit with ne git
-	await initGit();
+	spinner.start('Running initializer\n\n');
+	if (appName) {
+		// clone inito repository in app
+		await gitCloneInito();
+		// npm install
+		await npmInstall();
+		// change package.json name
+		await changePackageName();
+		// reinit with ne git
+		await initGit();
+		// first build
+		await firstBuild();
+
+		spinner.succeed(`Project ${appName.bold.white} successfully initialized\n`);
+	} else {
+		spinner.fail(
+			`You have to specify a ${'PROJECT NAME'.bold.white}. ${
+				'create-inito <PROJECT_NAME>'.white
+			}`
+		);
+	}
 };
 
-// const createDirectory = () => {
-// 	return new Promise(resolve => {
-// 		shell.exec(`mkdir ${appName}`, () => {
-// 			console.log(`Directory ${appName.bold} created!`);
-// 			resolve(true);
-// 		});
-// 	});
-// };
-
 const gitCloneInito = () => {
+	spinner.start('Cloning repo\n');
 	return new Promise(resolve => {
 		shell.exec(`git clone ${initoRepository} ${appName}`, () => {
-			console.log(`${'INITO'.bold} cloned as ${appName.bold}!`);
+			spinner.succeed(`${'INITO'.bold.white} cloned as ${appName.bold.white}!\n`);
 			resolve(true);
 		});
 	});
 };
 
 const npmInstall = () => {
-	console.log(`Installing ${'NPM'.bold} packages...`);
+	spinner.start(`Installing ${'NPM'.bold.white} packages\n`);
 	return new Promise(resolve => {
 		shell.exec(`cd ${appName} && npm install`, () => {
-			console.log(`${'NPM'.bold} packages installed!`);
+			spinner.succeed(`${'NPM'.bold} packages installed!\n`);
 			resolve(true);
 		});
 	});
 };
 
 const changePackageName = () => {
-	console.log(`Changing ${'package.json'.bold} name...`);
+	spinner.start(`Changing ${'package.json'.bold.white} name...\n`);
 	return new Promise(resolve => {
 		const package = JSON.parse(fs.readFileSync(`${appName}/package.json`));
 		const packageLock = JSON.parse(fs.readFileSync(`${appName}/package-lock.json`));
@@ -62,17 +68,27 @@ const changePackageName = () => {
 			spaces: 2
 		});
 
-		console.log(`${'package.json'.bold} name changed!`);
+		spinner.succeed(`${'package.json'.bold} name changed!\n`);
 
 		resolve(true);
 	});
 };
 
 const initGit = () => {
-	console.log(`Inititalizing new ${'GIT'.bold}...`);
+	spinner.start(`Inititalizing new ${'GIT'.bold.white}\n`);
 	return new Promise(resolve => {
 		shell.exec(`cd ${appName} && npm run git:remove && npm run git:init`, () => {
-			console.log(`New ${'GIT'.bold} initialized!`);
+			spinner.succeed(`New ${'GIT'.bold} initialized!\n`);
+			resolve(true);
+		});
+	});
+};
+
+const firstBuild = () => {
+	spinner.start(`Building app ${appName.bold.white}\n`);
+	return new Promise(resolve => {
+		shell.exec(`cd ${appName} && npm run build`, () => {
+			spinner.succeed(`${appName.bold.white} built successfully\n`);
 			resolve(true);
 		});
 	});
