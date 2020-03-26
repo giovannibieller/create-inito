@@ -1,0 +1,27 @@
+{
+	"name": "create-inito",
+	"version": "1.0.0",
+	"description": "Initializer for INITO",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/giovannibieller/create-inito.git"
+	},
+	"author": "Giovanni Bieller",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/giovannibieller/create-inito/issues"
+	},
+	"homepage": "https://github.com/giovannibieller/create-inito#readme",
+	"dependencies": {
+		"colors": "^1.4.0",
+		"readline": "^1.3.0",
+		"shelljs": "^0.8.3"
+	},
+	"bin": {
+		"create-inito": "index.js"
+	}
+}
