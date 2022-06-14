@@ -13,7 +13,7 @@ npm install -g create-inito
 Create your App
 
 ```
-create-inito <APP_NAME>
+create-inito <APP_NAME> '' || TS  (typescript o js [default])
 -------------------------
 
 1. create-inito "My New App" ✅
